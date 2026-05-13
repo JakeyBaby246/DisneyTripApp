@@ -1,8 +1,9 @@
-﻿rules_version = '2';
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /trips/{tripId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if true;
     }
   }
 }
