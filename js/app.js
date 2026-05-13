@@ -16,7 +16,18 @@ import {
 import { firebaseConfig, TRIP_DOC_PATH, isFirebaseConfigured } from "./firebase-config.js";
 import { defaultTripState } from "./seed-data.js";
 
+const ALLOWED_GOOGLE_EMAILS = [
+  "jakenelsonfernandez@gmail.com",
+  "sjthai37@gmail.com",
+].map((e) => e.toLowerCase());
+
+function isAllowedGoogleUser(user) {
+  const email = (user?.email || "").toLowerCase();
+  return email.length > 0 && ALLOWED_GOOGLE_EMAILS.includes(email);
+}
+
 const itineraryList = document.getElementById("itineraryList");
+
 const taskList = document.getElementById("taskList");
 const syncBanner = document.getElementById("syncBanner");
 const authBar = document.getElementById("authBar");
@@ -122,13 +133,13 @@ function moveDown(item) {
 }
 
 function scheduleSave() {
-  if (applyingRemote || !tripRef || !auth?.currentUser) return;
+  if (applyingRemote || !tripRef || !auth?.currentUser || !isAllowedGoogleUser(auth.currentUser)) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => void persistNow(), 600);
 }
 
 async function persistNow() {
-  if (!tripRef || applyingRemote || !auth?.currentUser) return;
+  if (!tripRef || applyingRemote || !auth?.currentUser || !isAllowedGoogleUser(auth.currentUser)) return;
   const payload = {
     version: 1,
     itinerary: readList(itineraryList),
@@ -188,7 +199,7 @@ function wireAddButtons(requireAuth) {
   if (addButtonsWired) return;
   addButtonsWired = true;
   btnAddItinerary?.addEventListener("click", () => {
-    if (requireAuth && !auth?.currentUser) {
+    if (requireAuth && (!auth?.currentUser || !isAllowedGoogleUser(auth.currentUser))) {
       setBanner("Sign in with Google to edit the trip.", "warn");
       return;
     }
@@ -196,7 +207,7 @@ function wireAddButtons(requireAuth) {
     scheduleSave();
   });
   btnAddTask?.addEventListener("click", () => {
-    if (requireAuth && !auth?.currentUser) {
+    if (requireAuth && (!auth?.currentUser || !isAllowedGoogleUser(auth.currentUser))) {
       setBanner("Sign in with Google to edit the trip.", "warn");
       return;
     }
@@ -322,18 +333,27 @@ function initFirebaseWithGoogleAuth() {
   });
 
   onAuthStateChanged(auth, (user) => {
-    updateAuthUi(user);
     if (!user) {
+      updateAuthUi(null);
       stopTripSync();
       setBanner("Sign in with Google to load the shared trip.", "warn");
       return;
     }
-    setBanner("Loading trip…", "pending");
+    if (!isAllowedGoogleUser(user)) {
+      setBanner("This Google account is not authorized for this trip.", "err");
+      void signOut(auth);
+      updateAuthUi(null);
+      stopTripSync();
+      return;
+    }
+    updateAuthUi(user);
+    setBanner("Loading trip...", "pending");
     startTripSync().catch((e) => {
       console.error(e);
-      setBanner(`Could not load trip: ${e.message || e}. Check Firestore rules allow signed-in users.`, "err");
+      setBanner(`Could not load trip: ${e.message || e}. Check Firestore rules.`, "err");
     });
   });
+
 }
 
 if (!isFirebaseConfigured()) {
