@@ -196,9 +196,23 @@
             font-weight: bold;
             margin-top: 10px;
         }
+
+        #syncBanner {
+            margin: 0 0 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+        #syncBanner[data-kind="ok"] { background: #e6f4ea; color: #137333; }
+        #syncBanner[data-kind="pending"] { background: #e8f0fe; color: #174ea6; }
+        #syncBanner[data-kind="warn"] { background: #fff8e1; color: #8a6d00; }
+        #syncBanner[data-kind="err"] { background: #fce8e6; color: #c5221f; }
     </style>
 </head>
 <body>
+
+<p id="syncBanner" hidden></p>
 
 <div class="dashboard">
     <div class="header">
@@ -251,125 +265,17 @@
         </div>
 
         <h2>Interactive Itinerary</h2>
-        <div id="itineraryList">
-            <div class="editable-item">
-                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
-                <div class="item-content"><input class="title-input" value="Mon, Aug 31: Arrival"><textarea class="desc-input">Flight departs PHL at 7:00 AM. Arrive at 9:35 AM. Pick up Nissan Rogue at 11:00 AM. Check into Animal Kingdom Lodge. Dinner at Disney Springs.</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
-                <div class="item-content"><input class="title-input" value="Tue, Sept 1: Disney Park Day 1"><textarea class="desc-input">Use 3-Day Tickets. Magic Kingdom or EPCOT.</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
-                <div class="item-content"><input class="title-input" value="Wed, Sept 2: Disney Park Day 2"><textarea class="desc-input">Use 3-Day Tickets. Consider Animal Kingdom morning.</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
-                <div class="item-content"><input class="title-input" value="Thu, Sept 3: Disney Park Day 3"><textarea class="desc-input">Final Disney park day using tickets.</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
-                <div class="item-content"><input class="title-input" value="Fri, Sept 4: Drive to Palm Coast"><textarea class="desc-input">Check out of Lodge. Drive to Palm Coast for family visit.</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
-                <div class="item-content"><input class="title-input" value="Sat, Sept 5: Family Fun"><textarea class="desc-input">Palm Coast family time and relaxation.</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
-                <div class="item-content"><input class="title-input" value="Sun, Sept 6: Labor Day Weekend"><textarea class="desc-input">Family visit continues.</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
-                <div class="item-content"><input class="title-input" value="Mon, Sept 7: Labor Day"><textarea class="desc-input">Final day in Palm Coast.</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
-                <div class="item-content"><input class="title-input" value="Tue, Sept 8: Departure"><textarea class="desc-input">Return to MCO by 1:00 PM. Return flight departs at 3:05 PM.</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-        </div>
-        <button class="add-btn" onclick="addItem('itineraryList')">+ Add Day</button>
+        <div id="itineraryList"></div>
+        <button type="button" class="add-btn" id="btnAddItinerary">+ Add Day</button>
     </div>
 
     <div id="Tasks" class="tab-content">
         <h2>Trip Tasks</h2>
-        <div id="taskList">
-            <!-- NEW TASKS FROM IMPORTANT DATES -->
-            <div class="editable-item">
-                <div class="item-content"><input class="title-input" value="Dining Reservations (JUL 02)"><textarea class="desc-input">Book safe spots 60 days out! [cite: 3]</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-content"><input class="title-input" value="Lightning Lane (AUG 24)"><textarea class="desc-input">Skip the lines (7 days out)! [cite: 3]</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-content"><input class="title-input" value="PHL Flight Check-In (AUG 30)"><textarea class="desc-input">Southwest at 7:00 AM sharp [cite: 3].</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-content"><input class="title-input" value="MCO Flight Check-In (SEP 07)"><textarea class="desc-input">Southwest at 3:05 PM [cite: 3].</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <!-- ORIGINAL TASKS -->
-            <div class="editable-item">
-                <div class="item-content"><input class="title-input" value="Special Requests (ASAP)"><textarea class="desc-input">Call Disney for the crib and microwave [cite: 3].</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-            <div class="editable-item">
-                <div class="item-content"><input class="title-input" value="Puppy Hotel (ASAP)"><textarea class="desc-input">Board Jax, Finn, and Sonya [cite: 3].</textarea></div>
-                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
-            </div>
-        </div>
-        <button class="add-btn" onclick="addItem('taskList')">+ Add Task</button>
+        <div id="taskList"></div>
+        <button type="button" class="add-btn" id="btnAddTask">+ Add Task</button>
     </div>
 </div>
 
-<script>
-function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tab-content");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-        tabcontent[i].classList.remove("active");
-    }
-    tablinks = document.getElementsByClassName("tab-btn");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].classList.remove("active");
-    }
-    document.getElementById(tabName).style.display = "block";
-    document.getElementById(tabName).classList.add("active");
-    evt.currentTarget.classList.add("active");
-}
-
-function addItem(listId) {
-    var container = document.getElementById(listId);
-    var div = document.createElement("div");
-    div.className = "editable-item";
-    let controls = listId === 'itineraryList' ? '<div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>' : '';
-    div.innerHTML = controls + '<div class="item-content"><input class="title-input" placeholder="Title..."><textarea class="desc-input" placeholder="Notes..."></textarea></div><button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>';
-    container.appendChild(div);
-}
-
-function moveUp(btn) {
-    const item = btn.closest('.editable-item');
-    if (item.previousElementSibling) item.parentNode.insertBefore(item, item.previousElementSibling);
-}
-
-function moveDown(btn) {
-    const item = btn.closest('.editable-item');
-    if (item.nextElementSibling) item.parentNode.insertBefore(item.nextElementSibling, item);
-}
-</script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
