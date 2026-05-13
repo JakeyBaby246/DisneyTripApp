@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fernandez Adventure Interactive Planner v6</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Open+Sans:wght@400;600;700&display=swap');
+
+        :root {
+            --disney-blue: #1a4e8a;
+            --mickey-red: #e60012;
+            --mickey-yellow: #ffce00;
+            --bg-cream: #fffaf0;
+            --card-white: #ffffff;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-cream);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard {
+            max-width: 1100px;
+            margin: 0 auto;
+            border: 8px solid var(--mickey-yellow);
+            border-radius: 25px;
+            background-color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: var(--mickey-red);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            border-bottom: 5px solid var(--disney-blue);
+        }
+
+        .header h1 {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 36pt;
+            margin: 0;
+            text-shadow: 2px 2px #000;
+        }
+
+        .tabs {
+            display: flex;
+            background: #eee;
+            border-bottom: 2px solid var(--disney-blue);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1em;
+            background: #eee;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--disney-blue);
+            border-top: 5px solid var(--mickey-red);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .booking-card {
+            background: #f0f8ff;
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 8px solid var(--disney-blue);
+        }
+
+        .important-dates-section {
+            background: #fff9e6;
+            border: 2px dashed var(--disney-blue);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .date-badge {
+            background: var(--mickey-red);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 10pt;
+            font-weight: bold;
+            margin-right: 15px;
+            min-width: 80px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .date-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .editable-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .item-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-btn {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 2px 8px;
+            font-size: 14px;
+        }
+
+        .item-content {
+            flex-grow: 1;
+        }
+
+        .title-input {
+            font-weight: bold;
+            color: var(--disney-blue);
+            border: none;
+            background: transparent;
+            font-size: 1.1em;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .desc-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-style: italic;
+            color: #555;
+            resize: none;
+            min-height: 40px;
+        }
+
+        .btn-remove {
+            background: var(--mickey-red);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-left: auto;
+        }
+
+        .add-btn {
+            background: var(--disney-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <div class="header">
+        <h1>The Fernandez Trip Manager</h1>
+        <p>August 31 – September 8, 2026</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'Logistics')">Logistics & Itinerary</button>
+        <button class="tab-btn" onclick="openTab(event, 'Tasks')">To-Do List</button>
+    </div>
+
+    <div id="Logistics" class="tab-content active">
+        
+        <div class="important-dates-section">
+            <h2>✨ Important Dates</h2>
+            <div class="date-item">
+                <span class="date-badge">JUL 02</span> <b>Dining Reservations:</b> Book safe spots 60 days out!
+            </div>
+            <div class="date-item">
+                <span class="date-badge">AUG 24</span> <b>Lightning Lane:</b> Skip the lines (7 days out)!
+            </div>
+            <div class="date-item">
+                <span class="date-badge">AUG 30</span> <b>PHL Flight Check-In:</b> Southwest at 7:00 AM sharp.
+            </div>
+            <div class="date-item">
+                <span class="date-badge">SEP 07</span> <b>MCO Flight Check-In:</b> Southwest at 3:05 PM.
+            </div>
+        </div>
+
+        <div class="grid-3" style="margin-bottom: 30px;">
+            <div class="booking-card">
+                <h3>✈️ Flights (Southwest)</h3>
+                <b>Confirmation:</b> AF7JWA<br>
+                <b>PHL &rarr; MCO (WN 2370):</b> Depart 7:00 AM / Arrive 9:35 AM<br>
+                <b>MCO &rarr; PHL (WN 2811):</b> Depart 3:05 PM
+            </div>
+            <div class="booking-card">
+                <h3>🏨 The Den</h3>
+                Animal Kingdom Lodge<br>
+                Safari View Room<br>
+                Aug 31 - Sept 4
+            </div>
+            <div class="booking-card">
+                <h3>🚗 The Ride</h3>
+                Enterprise: 2102045839COUNT<br>
+                Nissan Rogue (SUV)<br>
+                Pickup: 11:00 AM
+            </div>
+        </div>
+
+        <h2>Interactive Itinerary</h2>
+        <div id="itineraryList">
+            <div class="editable-item">
+                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
+                <div class="item-content"><input class="title-input" value="Mon, Aug 31: Arrival"><textarea class="desc-input">Flight departs PHL at 7:00 AM. Arrive at 9:35 AM. Pick up Nissan Rogue at 11:00 AM. Check into Animal Kingdom Lodge. Dinner at Disney Springs.</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
+                <div class="item-content"><input class="title-input" value="Tue, Sept 1: Disney Park Day 1"><textarea class="desc-input">Use 3-Day Tickets. Magic Kingdom or EPCOT.</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
+                <div class="item-content"><input class="title-input" value="Wed, Sept 2: Disney Park Day 2"><textarea class="desc-input">Use 3-Day Tickets. Consider Animal Kingdom morning.</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
+                <div class="item-content"><input class="title-input" value="Thu, Sept 3: Disney Park Day 3"><textarea class="desc-input">Final Disney park day using tickets.</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
+                <div class="item-content"><input class="title-input" value="Fri, Sept 4: Drive to Palm Coast"><textarea class="desc-input">Check out of Lodge. Drive to Palm Coast for family visit.</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
+                <div class="item-content"><input class="title-input" value="Sat, Sept 5: Family Fun"><textarea class="desc-input">Palm Coast family time and relaxation.</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
+                <div class="item-content"><input class="title-input" value="Sun, Sept 6: Labor Day Weekend"><textarea class="desc-input">Family visit continues.</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
+                <div class="item-content"><input class="title-input" value="Mon, Sept 7: Labor Day"><textarea class="desc-input">Final day in Palm Coast.</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>
+                <div class="item-content"><input class="title-input" value="Tue, Sept 8: Departure"><textarea class="desc-input">Return to MCO by 1:00 PM. Return flight departs at 3:05 PM.</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+        </div>
+        <button class="add-btn" onclick="addItem('itineraryList')">+ Add Day</button>
+    </div>
+
+    <div id="Tasks" class="tab-content">
+        <h2>Trip Tasks</h2>
+        <div id="taskList">
+            <!-- NEW TASKS FROM IMPORTANT DATES -->
+            <div class="editable-item">
+                <div class="item-content"><input class="title-input" value="Dining Reservations (JUL 02)"><textarea class="desc-input">Book safe spots 60 days out! [cite: 3]</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-content"><input class="title-input" value="Lightning Lane (AUG 24)"><textarea class="desc-input">Skip the lines (7 days out)! [cite: 3]</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-content"><input class="title-input" value="PHL Flight Check-In (AUG 30)"><textarea class="desc-input">Southwest at 7:00 AM sharp [cite: 3].</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-content"><input class="title-input" value="MCO Flight Check-In (SEP 07)"><textarea class="desc-input">Southwest at 3:05 PM [cite: 3].</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <!-- ORIGINAL TASKS -->
+            <div class="editable-item">
+                <div class="item-content"><input class="title-input" value="Special Requests (ASAP)"><textarea class="desc-input">Call Disney for the crib and microwave [cite: 3].</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+            <div class="editable-item">
+                <div class="item-content"><input class="title-input" value="Puppy Hotel (ASAP)"><textarea class="desc-input">Board Jax, Finn, and Sonya [cite: 3].</textarea></div>
+                <button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>
+            </div>
+        </div>
+        <button class="add-btn" onclick="addItem('taskList')">+ Add Task</button>
+    </div>
+</div>
+
+<script>
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+        tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-btn");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabName).style.display = "block";
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+}
+
+function addItem(listId) {
+    var container = document.getElementById(listId);
+    var div = document.createElement("div");
+    div.className = "editable-item";
+    let controls = listId === 'itineraryList' ? '<div class="item-controls"><button class="control-btn" onclick="moveUp(this)">▲</button><button class="control-btn" onclick="moveDown(this)">▼</button></div>' : '';
+    div.innerHTML = controls + '<div class="item-content"><input class="title-input" placeholder="Title..."><textarea class="desc-input" placeholder="Notes..."></textarea></div><button class="btn-remove" onclick="this.parentElement.remove()">Delete</button>';
+    container.appendChild(div);
+}
+
+function moveUp(btn) {
+    const item = btn.closest('.editable-item');
+    if (item.previousElementSibling) item.parentNode.insertBefore(item, item.previousElementSibling);
+}
+
+function moveDown(btn) {
+    const item = btn.closest('.editable-item');
+    if (item.nextElementSibling) item.parentNode.insertBefore(item.nextElementSibling, item);
+}
+</script>
+</body>
+</html>
