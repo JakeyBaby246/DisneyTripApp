@@ -37,6 +37,7 @@ const userLabel = document.getElementById("userLabel");
 const userPhoto = document.getElementById("userPhoto");
 const btnAddItinerary = document.getElementById("btnAddItinerary");
 const btnAddTask = document.getElementById("btnAddTask");
+const dashboard = document.getElementById("dashboard");
 
 let db;
 let auth;
@@ -157,6 +158,7 @@ async function persistNow() {
 }
 
 function setPlannerDisabled(disabled) {
+  if (dashboard) dashboard.hidden = disabled;
   [btnAddItinerary, btnAddTask].forEach((b) => {
     if (b) b.disabled = disabled;
   });
